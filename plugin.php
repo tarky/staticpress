@@ -56,3 +56,10 @@ register_deactivation_hook(__FILE__, array($staticpress, 'deactivate'));
 
 if (is_admin())
 	new static_press_admin(plugin_basename(__FILE__));
+
+add_action('StaticPress::file_put', 'static_rm', 1);
+function static_rm($file_dest, $url){
+  if(strstr($file_dest, '/author/') or strstr($file_dest, '/wp-content/plugins/')){
+		unlink($file_dest);
+	}
+}

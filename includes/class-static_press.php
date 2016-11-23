@@ -648,7 +648,6 @@ CREATE TABLE `{$this->url_table}` (
 		$urls = array_merge($urls, $this->front_page_url());
 		$urls = array_merge($urls, $this->single_url());
 		$urls = array_merge($urls, $this->terms_url());
-		$urls = array_merge($urls, $this->author_url());
 		$urls = array_merge($urls, $this->static_files_url());
 		$urls = array_merge($urls, $this->seo_url());
 		return $urls;
@@ -717,7 +716,7 @@ CREATE TABLE `{$this->url_table}` (
 		$posts = $wpdb->get_results("
 select ID, post_type, post_content, post_status, post_modified
  from {$wpdb->posts}
- where (post_status = 'publish' or post_type = 'attachment')
+ where (post_status = 'publish')
  and post_type in ({$this->post_types})
  order by post_type, ID
 ");
@@ -868,8 +867,6 @@ SELECT DISTINCT post_author, COUNT(ID) AS count, MAX(post_modified) AS modified
 		}
 		$static_files = array_merge(
 			$this->scan_file(trailingslashit(ABSPATH), '{'.implode(',',$static_files_filter).'}', false),
-			$this->scan_file(trailingslashit(ABSPATH).'wp-admin/', '{'.implode(',',$static_files_filter).'}', true),
-			$this->scan_file(trailingslashit(ABSPATH).'wp-includes/', '{'.implode(',',$static_files_filter).'}', true),
 			$this->scan_file(trailingslashit(WP_CONTENT_DIR), '{'.implode(',',$static_files_filter).'}', true)
 			);
 		unset($static_files_filter);
