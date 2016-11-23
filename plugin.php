@@ -59,7 +59,9 @@ if (is_admin())
 
 add_action('StaticPress::file_put', 'static_rm', 1);
 function static_rm($file_dest, $url){
-  if(strstr($file_dest, '/author/') or strstr($file_dest, '/wp-content/plugins/')){
+  if(strstr($file_dest, '/author/')
+	  or strstr($file_dest, '/wp-content/plugins/')
+    or strstr($file_dest, '/wp-json/index.html')){
 		unlink($file_dest);
 	}
 }
