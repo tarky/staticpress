@@ -63,3 +63,13 @@ function static_rm($file_dest, $url){
 		unlink($file_dest);
 	}
 }
+
+add_action('StaticPress::file_put', 'replace_url_of_feed', 2);
+function replace_url_of_feed($file_dest, $url){
+  if(strstr($file_dest, '/feed/index.html')){
+		$buff = file_get_contents($file_dest);
+		$replace = substr(static_press_admin::static_url(), 0, -1);
+		$content = str_replace(home_url(),$replace,$buff);
+		file_put_contents($file_dest, $content);
+	}
+}
