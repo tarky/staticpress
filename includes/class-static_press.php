@@ -258,6 +258,8 @@ CREATE TABLE `{$this->url_table}` (
 	}
 
 	public function static_url($permalink) {
+		if(strstr($permalink, '/affinger4/'))
+			$permalink = str_replace('.php', '.css', $permalink);
 		return urldecode(
 			preg_match('/\.[^\.]+?$/i', $permalink) 
 			? $permalink
@@ -362,6 +364,7 @@ CREATE TABLE `{$this->url_table}` (
 	}
 
 	private function create_static_file($url, $file_type = 'other_page', $create_404 = true, $crawling = false) {
+		$crawling = !strstr($url, str_replace(ABSPATH, '/', WP_CONTENT_DIR));
 		$url = apply_filters('StaticPress::get_url', $url);
 		$file_dest = untrailingslashit($this->static_dir) . $this->static_url($url);
 		$dir_sep = defined('DIRECTORY_SEPARATOR') ? DIRECTORY_SEPARATOR : '/';
@@ -551,7 +554,11 @@ CREATE TABLE `{$this->url_table}` (
 
 			$url['enable'] = 1;
 			if (preg_match('#\.php$#i', $url['url'])) {
-				$url['enable'] = 0;
+				if(strstr($url['url'], '/affinger4/')){
+					$url['file_name'] = str_replace('.php', '.css', $url['url']);
+				}else{
+					$url['enable'] = 0;
+				}
 			} else if (preg_match('#\?[^=]+[=]?#i', $url['url'])) {
 				$url['enable'] = 0;
 			} else if (preg_match('#/wp-admin/$#i', $url['url'])) {
