@@ -65,8 +65,8 @@ function replace_url_of_feed($content, $http_code = 200){
 
 add_filter('StaticPress::put_content', 'replace_affinger_css');
 function replace_affinger_css($content, $http_code = 200){
-	$search = array('st-kanricss.php', 'st-rankcss.php');
-  $replace = array('st-kanricss.css', 'st-rankcss.css');
+	$search = array('st-kanricss.php', 'st-rankcss.php', 'st-themecss-loader.php');
+  $replace = array('st-kanricss.css', 'st-rankcss.css', 'st-themecss-loader.css');
 	return str_replace($search, $replace, $content);
 }
 
