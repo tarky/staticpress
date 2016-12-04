@@ -70,6 +70,15 @@ function replace_affinger_css($content, $http_code = 200){
 	return str_replace($search, $replace, $content);
 }
 
+require_once('php-html-css-js-minifier.php');
+add_action('StaticPress::file_put', 'compress_css', 2);
+function compress_css($file_dest, $url){
+  if(strstr($file_dest, '.css')){
+		$content =  minify_css(file_get_contents($file_dest));
+    file_put_contents($file_dest, $content);
+  }
+}
+
 function st_author() {
 }
 function remove_scripts(){
