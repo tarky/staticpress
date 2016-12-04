@@ -872,6 +872,8 @@ SELECT DISTINCT post_author, COUNT(ID) AS count, MAX(post_modified) AS modified
 		unset($static_files_filter);
 
 		foreach ($static_files as $static_file){
+			if(strstr($static_file, '/plugins/'))
+        continue;
 			$static_file_url = str_replace(trailingslashit(ABSPATH), trailingslashit($this->get_site_url()), $static_file);
 			$urls[] = array(
 				'type' => $url_type,
