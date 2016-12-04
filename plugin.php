@@ -57,12 +57,29 @@ register_deactivation_hook(__FILE__, array($staticpress, 'deactivate'));
 if (is_admin())
 	new static_press_admin(plugin_basename(__FILE__));
 
-add_action('StaticPress::file_put', 'replace_url_of_feed', 2);
-function replace_url_of_feed($file_dest, $url){
-  if(strstr($file_dest, '/feed/index.html')){
-		$buff = file_get_contents($file_dest);
+add_filter('StaticPress::put_content', 'replace_url_of_feed', 11);
+function replace_url_of_feed($content, $http_code = 200){
 		$replace = substr(static_press_admin::static_url(), 0, -1);
-		$content = str_replace(home_url(),$replace,$buff);
-		file_put_contents($file_dest, $content);
-	}
+		return str_replace(home_url(), $replace, $content);
 }
+
+add_filter('StaticPress::put_content', 'replace_affinger_css');
+function replace_affinger_css($content, $http_code = 200){
+	$search = array('st-kanricss.php', 'st-rankcss.php');
+  $replace = array('st-kanricss.css', 'st-rankcss.css');
+	return str_replace($search, $replace, $content);
+}
+
+function st_author() {
+}
+function remove_scripts(){
+	wp_deregister_script( 'comment-reply' );
+	//oEmbed関連のタグを削除
+  remove_action( 'wp_head', 'rest_output_link_wp_head' );
+  remove_action( 'wp_head', 'wp_oembed_add_discovery_links' );
+  remove_action( 'wp_head', 'wp_oembed_add_host_js' );
+	//emoji関連のタグを削除
+	remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
+  remove_action( 'wp_print_styles', 'print_emoji_styles' );
+}
+add_action('init','remove_scripts');
