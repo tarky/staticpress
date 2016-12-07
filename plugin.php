@@ -70,6 +70,11 @@ function replace_affinger_css($content, $http_code = 200){
 	return str_replace($search, $replace, $content);
 }
 
+add_filter('StaticPress::put_content', 'replace_home_uri', 11);
+function replace_home_uri($content, $http_code = 200){
+	return str_replace('href=""', 'href="/"', $content);;
+}
+
 require_once('php-html-css-js-minifier.php');
 add_action('StaticPress::file_put', 'compress_css', 2);
 function compress_css($file_dest, $url){
